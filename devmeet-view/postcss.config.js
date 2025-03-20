@@ -1,7 +1,7 @@
+// Ensure this file is treated as an ES module
 export default {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  };
-  
+  plugins: [
+    (await import("tailwindcss")).default,
+    (await import("autoprefixer")).default,
+  ],
+};
