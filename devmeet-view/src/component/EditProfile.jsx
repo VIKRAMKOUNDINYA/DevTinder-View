@@ -3,6 +3,7 @@ import { useSelector,useDispatch } from 'react-redux'
 import axios from 'axios'
 import { addUser } from '../utils/userSlice'
 import { UserCard } from './UserCard'
+import { BASE_URL } from '../utils/constants'
 
 export const EditProfile = () => {
     // const user=useSelector((store)=>store.user)
@@ -21,7 +22,7 @@ export const EditProfile = () => {
     const handleSubmit=async ()=>{
         setError("")
         try{
-        const res=await axios.post('http://localhost:8081/profile/edit',{
+        const res=await axios.post(BASE_URL+'/profile/edit',{
             firstName,about,gender,age,skills,photoUrl
         },{withCredentials:true})
         console.log(res.data.data)

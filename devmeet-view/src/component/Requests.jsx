@@ -2,6 +2,7 @@ import React,{useEffect} from 'react'
 import { useSelector,useDispatch } from 'react-redux'
 import axios from 'axios'
 import { addRequests, removeRequest } from '../utils/requestSlice'
+import { BASE_URL } from '../utils/constants'
 
 export const Requests = () => {
 
@@ -10,7 +11,7 @@ export const Requests = () => {
 
     const fetchRequests = async () => {
         try {
-            const res = await axios.get('http://localhost:8081/user/requests/received',{ withCredentials: true })
+            const res = await axios.get(BASE_URL+'/user/requests/received',{ withCredentials: true })
             console.log(res)
             dispatch(addRequests(res.data.data))
         } catch (err) {
@@ -25,7 +26,7 @@ export const Requests = () => {
 
     const reviewRequest=async (status,_id)=>{
         try{
-            const res = await axios.post('http://localhost:8081/request/review/'+status+"/"+_id,{},{ withCredentials: true})
+            const res = await axios.post(BASE_URL+'/request/review/'+status+"/"+_id,{},{ withCredentials: true})
             dispatch(removeRequest(_id))
         }
         catch(err){
