@@ -20,7 +20,7 @@ export const Body = () => {
             dispatch(addUser(res.data))
         }
         catch(err){
-          if(err.status===401){
+          if(err.status===400){
             navigate("/login")
             console.log(err)
           }
@@ -30,10 +30,12 @@ export const Body = () => {
         fetchUser()
     },[]);
   return (
-    <>
+    <div class="flex flex-col h-screen">
     <NavBar/>
-    <Outlet/>
+    <div className="flex-grow">
+        <Outlet />
+      </div>
     <Footer/>
-    </>
+    </div>
   )
 }

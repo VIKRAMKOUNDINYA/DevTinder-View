@@ -1,45 +1,67 @@
-import React,{useEffect} from 'react'
-import { useSelector,useDispatch } from 'react-redux';
-import { removeFeed } from '../utils/feedSlice';
-import axios from 'axios';
-import { BASE_URL } from '../utils/constants';
-export const UserCard = ({data}) => {
-    // const {data}=feed
-    console.log(data);
-    const requests = useSelector((store) => store.requests)
-    const dispatch = useDispatch()
+import React from "react";
+import { useDispatch } from "react-redux";
+import TinderCard from "react-tinder-card";
+import { removeFeed } from "../utils/feedSlice";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
-    const handleSendRequest = async (status,userId) => {
-        try {
-            const res = await axios.post(BASE_URL+'/request/send/'+status+"/"+userId,{},{ withCredentials: true })
-            console.log(res)
-            dispatch(removeFeed(userId))
-        } catch (err) {
-            console.log(err)
-        }
+export const UserCard = ({ data, disableSwipe = false }) => {
+  const dispatch = useDispatch();
+
+  const handleSendRequest = async (status, userId) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/send/" + status + "/" + userId,
+        {} ,
+        { withCredentials: true }
+      );
+      console.log(res);
+      dispatch(removeFeed(userId)); // Remove the card after swipe
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-    console.log(requests)
-    useEffect(() => {
-      handleSendRequest()
-    }, [])
-    const {_id,firstName,lastName,photoUrl,about,age,gender}=data
-  return (
-    <div className="card w-96 bg-base-300 shadow-sm my-12">
-  <figure>
-    <img
-      src={photoUrl}
-      alt="User" />
-  </figure>
-  <div className="card-body">
-    <h2 className="card-title">{firstName} {lastName}</h2>
-    <h2>{age} {gender}</h2>
-    <p>{about}</p>
-    <div className="card-actions justify-center my-4">
-      <button className="btn btn-secondary" onClick={()=>handleSendRequest('ignored',_id)}>Ignore</button>
-      <button className="btn btn-primary" onClick={()=>handleSendRequest('interested',_id)}>Interested</button>
+  const onSwipe = (direction) => {
+    if (!disableSwipe) {
+      if (direction === "right") {
+        handleSendRequest("interested", data._id);
+      } else if (direction === "left") {
+        handleSendRequest("ignored", data._id);
+      }
+    }
+  };
+
+  const { _id, firstName, lastName, photoUrl, about, age, gender } = data;
+
+  const CardContent = (
+    <div className="card bg-base-300 w-96 shadow-xl">
+      <figure>
+        <img src={photoUrl} alt="User" className="w-full h-80 object-cover" />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">
+          {firstName} {lastName}
+        </h2>
+        <h2>
+          {age} {gender}
+        </h2>
+        <p>{about}</p>
+      </div>
     </div>
-  </div>
-</div>
-  )
-}
+  );
+
+  return disableSwipe ? (
+    <div className="ml-10">{CardContent}</div> // Adjust margin to align beside form
+  ) : (
+    <TinderCard
+      className="absolute"
+      preventSwipe={["up", "down"]}
+      onSwipe={onSwipe}
+      key={_id}
+    >
+      {CardContent}
+    </TinderCard>
+  );
+};
+

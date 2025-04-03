@@ -42,9 +42,9 @@ export const EditProfile = () => {
     }
     }
   return (
-    <div className='flex justify-center my-2 '>
+    <div className='flex justify-center my-10'>
 <div className='flex justify-center mx-10'>
-<div className="card w-96 bg-base-300 shadow-sm my-12 mx-auto">
+<div className="card bg-base-300 w-96 shadow-xl">
   <div className="card-body">
     
     <div className="flex justify-between">
@@ -148,7 +148,8 @@ export const EditProfile = () => {
   </div>
 </div>
 </div>
-<UserCard data={{firstName,about,gender,age,skills,photoUrl}}/>
+<UserCard data={{ firstName, about, gender, age, skills, photoUrl }} disableSwipe={true} />
+
 {showToast && (<div className="toast toast-top toast-center">
 <div className={`alert ${error ? "alert-error" : "alert-success"}`}>
     <span>{error || "Profile Saved Successfully"}</span>
